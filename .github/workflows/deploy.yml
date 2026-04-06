@@ -1,0 +1,63 @@
+# GitHub Actions 工作流：推送到 main 分支时自动构建并部署到 ECS
+#
+# 【概念说明】
+# GitHub Actions 是 GitHub 内置的 CI/CD 平台。
+# 你在这个 YAML 文件里描述"什么时候做什么事"，GitHub 的服务器会自动执行。
+# YAML 靠缩进表示层级，缩进必须用空格（不能用 Tab）。
+
+name: Build and Deploy
+
+# ── 触发条件 ──────────────────────────────────────────────
+on:
+  push:
+    branches:
+      - main   # 只有推送到 main 分支时才触发
+
+# ── 任务定义 ──────────────────────────────────────────────
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest   # 在 GitHub 提供的 Ubuntu 虚拟机上运行
+
+    steps:
+      # 1. 拉取代码（包含你的 Obsidian 笔记和 Next.js 项目）
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. 安装 Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'   # 缓存 node_modules，加快后续构建速度
+
+      # 3. 安装依赖
+      - name: Install dependencies
+        run: npm ci   # ci 比 install 更严格，适合自动化环境
+
+      # 4. 构建静态文件（产物在 ./out 目录）
+      - name: Build
+        run: npm run build
+
+      # 5. 配置 SSH 私钥，用于连接 ECS 服务器
+      #    私钥内容存储在 GitHub Secrets 中（见下方配置说明）
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.ECS_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          # 将服务器加入已知主机，避免首次连接的交互确认
+          ssh-keyscan -H ${{ secrets.ECS_HOST }} >> ~/.ssh/known_hosts
+
+      # 6. 用 rsync 将构建产物同步到 ECS
+      #    rsync 只传输变化的文件，速度快、流量省
+      - name: Deploy to ECS via rsync
+        run: |
+          rsync -avz --delete \
+            -e "ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no" \
+            ./out/ \
+            ${{ secrets.ECS_USER }}@${{ secrets.ECS_HOST }}:/var/www/myblog/
+
+      # 7. 清理 SSH 私钥（安全习惯）
+      - name: Cleanup SSH key
+        if: always()
+        run: rm -f ~/.ssh/id_rsa
