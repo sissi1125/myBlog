@@ -1,44 +1,27 @@
 import Link from 'next/link'
-import { getAllPostsMeta, CATEGORIES, PostMeta } from '../lib/posts'
+import Layout from '../components/Layout'
+import { getAllPostsMeta, PostMeta } from '../lib/posts'
 import type { GetStaticProps } from 'next'
 
-interface Props {
-  recentPosts: PostMeta[]
-}
-
-export default function Home({ recentPosts }: Props) {
+export default function Home({ recentPosts }: { recentPosts: PostMeta[] }) {
   return (
-    <div className="container">
-      <header className="site-header">
-        <h1 className="site-title">
-          <Link href="/">我的博客</Link>
-        </h1>
-        <nav>
-          {CATEGORIES.map(cat => (
-            <Link key={cat.id} href={`/category/${encodeURIComponent(cat.id)}`}>
-              {cat.label}
+    <Layout>
+      <h2 className="text-xs font-semibold uppercase tracking-widest text-zinc-400 mb-6">最新文章</h2>
+      <ul className="divide-y divide-zinc-100">
+        {recentPosts.map(post => (
+          <li key={post.slug} className="py-4 flex items-baseline gap-4">
+            <time className="text-sm text-zinc-400 shrink-0 tabular-nums">{post.date}</time>
+            <Link href={`/posts/${post.slug}`} className="text-zinc-800 hover:text-indigo-500 transition-colors flex-1">
+              {post.title}
             </Link>
-          ))}
-        </nav>
-      </header>
-
-      <main>
-        <h2>最新文章</h2>
-        <ul className="post-list">
-          {recentPosts.map(post => (
-            <li key={post.slug}>
-              <span className="post-date">{post.date}</span>
-              <Link href={`/posts/${post.slug}`}>{post.title}</Link>
-              <span className="post-category">{post.category}</span>
-            </li>
-          ))}
-        </ul>
-      </main>
-    </div>
+            <span className="text-xs text-zinc-400 shrink-0">{post.category}</span>
+          </li>
+        ))}
+      </ul>
+    </Layout>
   )
 }
 
-export const getStaticProps: GetStaticProps = async () => {
-  const recentPosts = getAllPostsMeta().slice(0, 10)
-  return { props: { recentPosts } }
-}
+export const getStaticProps: GetStaticProps = async () => ({
+  props: { recentPosts: getAllPostsMeta().slice(0, 10) },
+})

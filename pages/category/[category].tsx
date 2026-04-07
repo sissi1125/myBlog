@@ -1,39 +1,28 @@
 import Link from 'next/link'
+import Layout from '../../components/Layout'
 import { getAllPostsMeta, CATEGORIES, PostMeta } from '../../lib/posts'
 import type { GetStaticProps, GetStaticPaths } from 'next'
 
-interface Props {
-  category: string
-  label: string
-  posts: PostMeta[]
-}
+interface Props { category: string; label: string; posts: PostMeta[] }
 
 export default function CategoryPage({ label, posts }: Props) {
   return (
-    <div className="container">
-      <header className="site-header">
-        <h1 className="site-title"><Link href="/">我的博客</Link></h1>
-        <nav>
-          {CATEGORIES.map(cat => (
-            <Link key={cat.id} href={`/category/${encodeURIComponent(cat.id)}`}>{cat.label}</Link>
-          ))}
-        </nav>
-      </header>
-      <main>
-        <h2>{label}</h2>
-        <ul className="post-list">
-          {posts.map(post => (
-            <li key={post.slug}>
-              <span className="post-date">{post.date}</span>
-              <Link href={`/posts/${post.slug}`}>{post.title}</Link>
-              {post.tags?.map(tag => (
-                <span key={tag} className="tag">{tag}</span>
-              ))}
-            </li>
-          ))}
-        </ul>
-      </main>
-    </div>
+    <Layout>
+      <h2 className="text-xs font-semibold uppercase tracking-widest text-zinc-400 mb-6">{label}</h2>
+      <ul className="divide-y divide-zinc-100">
+        {posts.map(post => (
+          <li key={post.slug} className="py-4 flex items-baseline gap-4">
+            <time className="text-sm text-zinc-400 shrink-0 tabular-nums">{post.date}</time>
+            <Link href={`/posts/${post.slug}`} className="text-zinc-800 hover:text-indigo-500 transition-colors flex-1">
+              {post.title}
+            </Link>
+            {post.tags?.map(tag => (
+              <span key={tag} className="text-xs bg-indigo-50 text-indigo-500 px-2 py-0.5 rounded-full shrink-0">{tag}</span>
+            ))}
+          </li>
+        ))}
+      </ul>
+    </Layout>
   )
 }
 
@@ -44,7 +33,11 @@ export const getStaticPaths: GetStaticPaths = async () => ({
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const category = params!.category as string
-  const cat = CATEGORIES.find(c => c.id === category)
-  const posts = getAllPostsMeta().filter(p => p.category === category)
-  return { props: { category, label: cat?.label || category, posts } }
+  return {
+    props: {
+      category,
+      label: CATEGORIES.find(c => c.id === category)?.label || category,
+      posts: getAllPostsMeta().filter(p => p.category === category),
+    },
+  }
 }

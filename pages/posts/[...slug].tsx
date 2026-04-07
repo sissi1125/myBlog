@@ -1,47 +1,38 @@
 import Link from 'next/link'
-import { getAllPostsMeta, getPostBySlug, CATEGORIES, Post } from '../../lib/posts'
+import Layout from '../../components/Layout'
+import { getAllPostsMeta, getPostBySlug, Post } from '../../lib/posts'
 import type { GetStaticProps, GetStaticPaths } from 'next'
 
 export default function PostPage({ post }: { post: Post }) {
   return (
-    <div className="container">
-      <header className="site-header">
-        <h1 className="site-title"><Link href="/">我的博客</Link></h1>
-        <nav>
-          {CATEGORIES.map(cat => (
-            <Link key={cat.id} href={`/category/${encodeURIComponent(cat.id)}`}>{cat.label}</Link>
-          ))}
-        </nav>
-      </header>
-      <main>
-        <article className="post">
-          <h1>{post.title}</h1>
-          <div className="post-meta">
-            <span>{post.date}</span>
-            <Link href={`/category/${encodeURIComponent(post.category)}`}>{post.category}</Link>
-            {post.tags?.map(tag => <span key={tag} className="tag">{tag}</span>)}
+    <Layout>
+      <article>
+        <header className="mb-8">
+          <h1 className="text-2xl font-bold text-zinc-900 mb-3">{post.title}</h1>
+          <div className="flex items-center gap-3 text-sm text-zinc-400">
+            <time>{post.date}</time>
+            <Link href={`/category/${encodeURIComponent(post.category)}`} className="text-indigo-400 hover:text-indigo-600 transition-colors">
+              {post.category}
+            </Link>
+            {post.tags?.map(tag => (
+              <span key={tag} className="bg-indigo-50 text-indigo-500 text-xs px-2 py-0.5 rounded-full">{tag}</span>
+            ))}
           </div>
-          <div
-            className="post-content"
-            dangerouslySetInnerHTML={{ __html: post.contentHtml }}
-          />
-        </article>
-        <Link href="/" className="back-link">← 返回首页</Link>
-      </main>
-    </div>
+        </header>
+        <div className="post-content" dangerouslySetInnerHTML={{ __html: post.contentHtml }} />
+      </article>
+      <Link href="/" className="inline-block mt-10 text-sm text-zinc-400 hover:text-indigo-500 transition-colors">
+        ← 返回首页
+      </Link>
+    </Layout>
   )
 }
 
-export const getStaticPaths: GetStaticPaths = async () => {
-  const posts = getAllPostsMeta()
-  return {
-    paths: posts.map(p => ({ params: { slug: p.slug.split('/') } })),
-    fallback: false,
-  }
-}
+export const getStaticPaths: GetStaticPaths = async () => ({
+  paths: getAllPostsMeta().map(p => ({ params: { slug: p.slug.split('/') } })),
+  fallback: false,
+})
 
-export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const slug = (params!.slug as string[]).join('/')
-  const post = await getPostBySlug(slug)
-  return { props: { post } }
-}
+export const getStaticProps: GetStaticProps = async ({ params }) => ({
+  props: { post: await getPostBySlug((params!.slug as string[]).join('/')) },
+})
