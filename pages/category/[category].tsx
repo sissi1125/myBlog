@@ -8,17 +8,45 @@ interface Props { category: string; label: string; posts: PostMeta[] }
 export default function CategoryPage({ label, posts }: Props) {
   return (
     <Layout>
-      <h2 className="text-xs font-semibold uppercase tracking-widest text-zinc-400 mb-6">{label}</h2>
-      <ul className="divide-y divide-zinc-100">
+      <h1
+        className="text-xl mb-10"
+        style={{ fontFamily: "'Noto Serif SC', serif", color: 'var(--color-text)' }}
+      >
+        {label}
+      </h1>
+      <ul className="space-y-6">
         {posts.map(post => (
-          <li key={post.slug} className="py-4 flex items-baseline gap-4">
-            <time className="text-sm text-zinc-400 shrink-0 tabular-nums">{post.date}</time>
-            <Link href={`/posts/${post.slug}`} className="text-zinc-800 hover:text-indigo-500 transition-colors flex-1">
-              {post.title}
+          <li key={post.slug} className="group">
+            <Link
+              href={`/posts/${post.slug}`}
+              className="block py-1 transition-opacity hover:opacity-70"
+            >
+              <div className="flex items-baseline gap-4 mb-1">
+                <h2
+                  className="text-base"
+                  style={{ fontFamily: "'Noto Serif SC', serif", color: 'var(--color-text)' }}
+                >
+                  {post.title}
+                </h2>
+              </div>
+              <div className="flex items-center gap-3">
+                <time
+                  className="text-xs tabular-nums"
+                  style={{ color: 'var(--color-text-tertiary)' }}
+                >
+                  {post.date}
+                </time>
+                {post.tags?.map(tag => (
+                  <span
+                    key={tag}
+                    className="text-xs"
+                    style={{ color: 'var(--color-text-tertiary)' }}
+                  >
+                    #{tag}
+                  </span>
+                ))}
+              </div>
             </Link>
-            {post.tags?.map(tag => (
-              <span key={tag} className="text-xs bg-indigo-50 text-indigo-500 px-2 py-0.5 rounded-full shrink-0">{tag}</span>
-            ))}
           </li>
         ))}
       </ul>
