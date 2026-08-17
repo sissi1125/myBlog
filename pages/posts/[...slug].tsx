@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Head from 'next/head'
 import Layout from '../../components/Layout'
 import { getAllPostsMeta, getPostBySlug, Post } from '../../lib/posts'
 import type { GetStaticProps, GetStaticPaths } from 'next'
@@ -6,11 +7,15 @@ import type { GetStaticProps, GetStaticPaths } from 'next'
 export default function PostPage({ post }: { post: Post }) {
   return (
     <Layout>
+      <Head>
+        <title>{post.title} | Sissi 的博客</title>
+        {post.excerpt && <meta name="description" content={post.excerpt} />}
+      </Head>
       <article>
         <header className="mb-10">
           <h1
             className="text-xl mb-4"
-            style={{ fontFamily: "'Noto Serif SC', serif", color: 'var(--color-text)' }}
+            style={{ fontFamily: "'Songti SC', 'STSong', Georgia, serif", color: 'var(--color-text)' }}
           >
             {post.title}
           </h1>

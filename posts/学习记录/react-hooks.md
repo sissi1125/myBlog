@@ -4,7 +4,6 @@ date: 2026-04-06
 tags: [React, 前端, Hooks]
 excerpt: 整理 useState、useEffect、useCallback 的使用要点
 ---
-
 ## useState
 
 状态管理的基础 Hook，每次调用 `setState` 都会触发重新渲染。
@@ -34,7 +33,3 @@ useEffect(() => {
 **加粗文字**示例，以及四级标题：
 
 #### 第四级标题
-
-图片示例（相对路径）：
-
-![示意图](../../public/images/react-hooks.png)

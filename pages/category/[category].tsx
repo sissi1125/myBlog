@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Head from 'next/head'
 import Layout from '../../components/Layout'
 import { getAllPostsMeta, CATEGORIES, PostMeta } from '../../lib/posts'
 import type { GetStaticProps, GetStaticPaths } from 'next'
@@ -8,9 +9,12 @@ interface Props { category: string; label: string; posts: PostMeta[] }
 export default function CategoryPage({ label, posts }: Props) {
   return (
     <Layout>
+      <Head>
+        <title>{label} | Sissi 的博客</title>
+      </Head>
       <h1
         className="text-xl mb-10"
-        style={{ fontFamily: "'Noto Serif SC', serif", color: 'var(--color-text)' }}
+        style={{ fontFamily: "'Songti SC', 'STSong', Georgia, serif", color: 'var(--color-text)' }}
       >
         {label}
       </h1>
@@ -24,7 +28,7 @@ export default function CategoryPage({ label, posts }: Props) {
               <div className="flex items-baseline gap-4 mb-1">
                 <h2
                   className="text-base"
-                  style={{ fontFamily: "'Noto Serif SC', serif", color: 'var(--color-text)' }}
+                  style={{ fontFamily: "'Songti SC', 'STSong', Georgia, serif", color: 'var(--color-text)' }}
                 >
                   {post.title}
                 </h2>

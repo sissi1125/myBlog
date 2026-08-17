@@ -6,9 +6,11 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <>
       <Head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600&display=swap" rel="stylesheet" />
+        <title>Sissi 的博客</title>
+        <meta
+          name="description"
+          content="记录技术学习、软件工程实践、读书笔记，以及工作与个人成长中的思考。"
+        />
       </Head>
       <Component {...pageProps} />
     </>

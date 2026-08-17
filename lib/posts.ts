@@ -21,6 +21,15 @@ export interface Post extends PostMeta {
   contentHtml: string
 }
 
+function normalizeDate(value: unknown): string {
+  if (value instanceof Date && !Number.isNaN(value.valueOf())) return value.toISOString().slice(0, 10)
+  if (typeof value === 'string') {
+    const match = value.match(/^\d{4}-\d{2}-\d{2}/)
+    if (match) return match[0]
+  }
+  return '1970-01-01'
+}
+
 // 将 Obsidian 特有语法转换为标准 Markdown / HTML
 function transformObsidianSyntax(content: string): string {
   return content
@@ -59,7 +68,7 @@ export function getAllPostsMeta(): PostMeta[] {
         slug,
         category,
         title: data.title || path.basename(slug),
-        date: data.date ? String(data.date).slice(0, 10) : '1970-01-01',
+        date: normalizeDate(data.date),
         tags: data.tags || [],
         excerpt: data.excerpt || '',
       }
@@ -85,7 +94,7 @@ export async function getPostBySlug(slug: string): Promise<Post> {
     slug,
     category,
     title: data.title || path.basename(slug),
-    date: data.date ? String(data.date).slice(0, 10) : '1970-01-01',
+    date: normalizeDate(data.date),
     tags: data.tags || [],
     excerpt: data.excerpt || '',
     contentHtml: processed.toString(),

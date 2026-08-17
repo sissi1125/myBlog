@@ -10,21 +10,19 @@ export default function Home({ recentPosts }: { recentPosts: PostMeta[] }) {
       <section className="mb-16">
         <h1
           className="text-2xl mb-4"
-          style={{ fontFamily: "'Noto Serif SC', serif", color: 'var(--color-text)' }}
+          style={{ fontFamily: "'Songti SC', 'STSong', Georgia, serif", color: 'var(--color-text)' }}
         >
-          你好，我是xxx
+          你好，我是 Sissi
         </h1>
         <p className="leading-loose" style={{ color: 'var(--color-text-secondary)' }}>
-          这里是一段个人介绍。可以写你的职业、兴趣、或者你想分享给读者的任何内容。
-          <br />
-          保持简洁，给读者留下舒适的阅读体验。
+          我在这里记录技术学习、软件工程实践、读书笔记，以及工作与个人成长中的思考。
         </p>
       </section>
 
       {/* 最新文章 */}
       <section>
         <h2
-          className="text-xs font-normal uppercase tracking-widest mb-8"
+          className="text-xs font-normal uppercase mb-8"
           style={{ color: 'var(--color-text-tertiary)' }}
         >
           最新文章
@@ -39,7 +37,7 @@ export default function Home({ recentPosts }: { recentPosts: PostMeta[] }) {
                 <div className="flex items-baseline gap-4 mb-1">
                   <h3
                     className="text-base"
-                    style={{ fontFamily: "'Noto Serif SC', serif", color: 'var(--color-text)' }}
+                    style={{ fontFamily: "'Songti SC', 'STSong', Georgia, serif", color: 'var(--color-text)' }}
                   >
                     {post.title}
                   </h3>

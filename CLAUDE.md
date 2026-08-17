@@ -12,6 +12,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 pnpm dev          # 本地开发，端口 3002
 pnpm build        # 构建生产产物（standalone 模式）
 pnpm start        # 运行生产构建
+pnpm blog:check   # 预览 Obsidian 公开目录的待发布变化
+pnpm blog:publish # 校验、构建、提交并推送文章
 ```
 
 ## 核心架构
@@ -37,11 +39,12 @@ pnpm start        # 运行生产构建
 - `[[Wiki链接|别名]]` → 别名（纯文本）
 - `[[Wiki链接]]` → 链接文字
 
-### 部署方式
+### 内容发布
 
-- **Docker**：`Dockerfile` 使用多阶段构建，最终运行 standalone 模式的 Next.js
-- **CI/CD**：`.github/workflows/deploy.yml` 推送到 main 时自动构建并 rsync 到 ECS
-- **Nginx**：`nginx.conf` 配置静态文件服务，适合 SSG 部署
+- **内容源**：`~/Documents/Obsidian Vault/博客发布`
+- **同步目标**：仓库中的 `posts/` 和 `public/images/posts/`
+- **一键发布**：`pnpm blog:publish` 只会提交文章和引用图片，推送后由 Vercel 自动部署
+- **备用部署**：`Dockerfile` 使用多阶段构建，最终运行 standalone 模式的 Next.js
 
 ### 分类配置
 
