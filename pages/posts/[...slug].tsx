@@ -8,7 +8,7 @@ export default function PostPage({ post }: { post: Post }) {
   return (
     <Layout>
       <Head>
-        <title>{post.title} | Sissi 的博客</title>
+        <title>{`${post.title} | Sissi 的博客`}</title>
         {post.excerpt && <meta name="description" content={post.excerpt} />}
       </Head>
       <article>

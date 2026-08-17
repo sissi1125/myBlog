@@ -10,7 +10,7 @@ export default function CategoryPage({ label, posts }: Props) {
   return (
     <Layout>
       <Head>
-        <title>{label} | Sissi 的博客</title>
+        <title>{`${label} | Sissi 的博客`}</title>
       </Head>
       <h1
         className="text-xl mb-10"
