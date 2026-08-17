@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title desc">
+  <title id="title">Sissi Public Path</title>
+  <desc id="desc">A visible S-shaped build path grows through connected AI nodes into a creative spark.</desc>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M15 49h19c7 0 11-3 11-8s-4-8-11-8h-8c-7 0-12-3-12-9s5-10 12-10h16" stroke="#202124" stroke-width="5"/>
+    <circle cx="15" cy="49" r="4" fill="#67B6C5" stroke="none"/>
+    <circle cx="35" cy="41" r="4" fill="#67B6C5" stroke="none"/>
+    <circle cx="14" cy="24" r="4" fill="#67B6C5" stroke="none"/>
+    <path
+      d="M53 40c.6 0 .9.6 1.1 1.8.6 3.6 2.3 5.2 6.1 5.9 1.2.2 1.8.6 1.8 1.3s-.6 1.1-1.8 1.3c-3.8.7-5.5 2.3-6.1 5.9C53.9 57.4 53.6 58 53 58s-.9-.6-1.1-1.8c-.6-3.6-2.3-5.2-6.1-5.9-1.2-.2-1.8-.6-1.8-1.3s.6-1.1 1.8-1.3c3.8-.7 5.5-2.3 6.1-5.9C52.1 40.6 52.4 40 53 40Z"
+      fill="#D1778F"
+      stroke="none"
+    />
+  </g>
+</svg>

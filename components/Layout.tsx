@@ -8,10 +8,12 @@ export default function Layout({ children, categories }: { children: React.React
         <div className="max-w-[640px] mx-auto px-6 py-8 flex flex-col items-start gap-5 sm:flex-row sm:items-center sm:justify-between">
           <Link
             href="/"
-            className="text-lg"
+            className="inline-flex items-center gap-3 text-lg"
             style={{ fontFamily: "'Songti SC', 'STSong', Georgia, serif", color: 'var(--color-text)' }}
+            aria-label="Sissi 首页"
           >
-            Sissi
+            <img src="/brand/logo.svg" alt="" width="32" height="32" aria-hidden="true" />
+            <span>Sissi</span>
           </Link>
           <nav className="flex flex-wrap gap-x-6 gap-y-2">
             {categories.map(cat => (
