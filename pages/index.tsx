@@ -1,11 +1,13 @@
 import Link from 'next/link'
 import Layout from '../components/Layout'
-import { getAllPostsMeta, PostMeta } from '../lib/posts'
+import { getAllCategories, getAllPostsMeta, Category, PostMeta } from '../lib/posts'
 import type { GetStaticProps } from 'next'
 
-export default function Home({ recentPosts }: { recentPosts: PostMeta[] }) {
+interface Props { recentPosts: PostMeta[]; categories: Category[] }
+
+export default function Home({ recentPosts, categories }: Props) {
   return (
-    <Layout>
+    <Layout categories={categories}>
       {/* 个人介绍 */}
       <section className="mb-16">
         <h1
@@ -66,5 +68,8 @@ export default function Home({ recentPosts }: { recentPosts: PostMeta[] }) {
 }
 
 export const getStaticProps: GetStaticProps = async () => ({
-  props: { recentPosts: getAllPostsMeta().slice(0, 10) },
+  props: {
+    recentPosts: getAllPostsMeta().slice(0, 10),
+    categories: getAllCategories(),
+  },
 })

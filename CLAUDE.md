@@ -29,7 +29,7 @@ pnpm blog:publish # 校验、构建、提交并推送文章
 ### 内容管理
 
 - **文章来源**：`posts/` 目录下的 `.md` 文件，按一级目录分类
-- **现有分类**：学习记录、就业思考、读书记录
+- **分类来源**：`posts/` 下真实存在的一级目录，随 Obsidian `博客发布` 目录动态生成
 - **内容处理**：`lib/posts.ts` 负责读取 Markdown、解析 frontmatter、转换 Obsidian 语法、生成 HTML
 
 ### Obsidian 语法支持
@@ -46,17 +46,9 @@ pnpm blog:publish # 校验、构建、提交并推送文章
 - **一键发布**：`pnpm blog:publish` 只会提交文章和引用图片，推送后由 Vercel 自动部署
 - **备用部署**：`Dockerfile` 使用多阶段构建，最终运行 standalone 模式的 Next.js
 
-### 分类配置
+### 分类规则
 
-分类定义在 `lib/posts.ts` 的 `CATEGORIES` 常量：
-
-```ts
-export const CATEGORIES = [
-  { id: '学习记录', label: '学习记录', subcategories: ['前端', '后端', '运维', '计算机基础'] },
-  { id: '就业思考', label: '就业 / 个人发展', subcategories: [] },
-  { id: '读书记录', label: '读书记录', subcategories: [] },
-]
-```
+分类不在代码中维护固定列表。发布脚本同步 Obsidian `博客发布` 下的一级目录，`lib/posts.ts` 再根据已同步文章生成导航与分类静态页面。
 
 ## 技术细节
 

@@ -3,7 +3,6 @@ import os from 'node:os'
 import path from 'node:path'
 import matter from 'gray-matter'
 
-export const CATEGORIES = ['学习记录', '就业思考', '读书记录']
 export const DEFAULT_SOURCE_DIR = path.join(os.homedir(), 'Documents', 'Obsidian Vault', '博客发布')
 
 const IMAGE_EXTENSIONS = new Set(['.avif', '.gif', '.jpeg', '.jpg', '.png', '.svg', '.webp'])
@@ -189,9 +188,8 @@ export async function buildContentPlan(options = {}) {
   for (const articlePath of sourceFiles) {
     const relativePath = path.relative(sourceDir, articlePath)
     const segments = relativePath.split(path.sep)
-    const category = segments[0]
-    if (segments.length < 2 || !CATEGORIES.includes(category)) {
-      throw new Error(`文章必须放在分类目录下：${relativePath}\n可用分类：${CATEGORIES.join('、')}`)
+    if (segments.length < 2) {
+      throw new Error(`文章必须放在一级分类目录下：${relativePath}`)
     }
 
     const raw = await fs.readFile(articlePath, 'utf8')

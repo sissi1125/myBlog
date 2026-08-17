@@ -1,14 +1,14 @@
 import Link from 'next/link'
 import Head from 'next/head'
 import Layout from '../../components/Layout'
-import { getAllPostsMeta, CATEGORIES, PostMeta } from '../../lib/posts'
+import { getAllCategories, getAllPostsMeta, Category, PostMeta } from '../../lib/posts'
 import type { GetStaticProps, GetStaticPaths } from 'next'
 
-interface Props { category: string; label: string; posts: PostMeta[] }
+interface Props { category: string; label: string; posts: PostMeta[]; categories: Category[] }
 
-export default function CategoryPage({ label, posts }: Props) {
+export default function CategoryPage({ label, posts, categories }: Props) {
   return (
-    <Layout>
+    <Layout categories={categories}>
       <Head>
         <title>{`${label} | Sissi 的博客`}</title>
       </Head>
@@ -59,17 +59,19 @@ export default function CategoryPage({ label, posts }: Props) {
 }
 
 export const getStaticPaths: GetStaticPaths = async () => ({
-  paths: CATEGORIES.map(cat => ({ params: { category: cat.id } })),
+  paths: getAllCategories().map(cat => ({ params: { category: cat.id } })),
   fallback: false,
 })
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const category = params!.category as string
+  const categories = getAllCategories()
   return {
     props: {
       category,
-      label: CATEGORIES.find(c => c.id === category)?.label || category,
+      label: categories.find(c => c.id === category)?.label || category,
       posts: getAllPostsMeta().filter(p => p.category === category),
+      categories,
     },
   }
 }

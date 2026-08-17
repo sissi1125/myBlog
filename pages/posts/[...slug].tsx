@@ -1,12 +1,14 @@
 import Link from 'next/link'
 import Head from 'next/head'
 import Layout from '../../components/Layout'
-import { getAllPostsMeta, getPostBySlug, Post } from '../../lib/posts'
+import { getAllCategories, getAllPostsMeta, getPostBySlug, Category, Post } from '../../lib/posts'
 import type { GetStaticProps, GetStaticPaths } from 'next'
 
-export default function PostPage({ post }: { post: Post }) {
+interface Props { post: Post; categories: Category[] }
+
+export default function PostPage({ post, categories }: Props) {
   return (
-    <Layout>
+    <Layout categories={categories}>
       <Head>
         <title>{`${post.title} | Sissi 的博客`}</title>
         {post.excerpt && <meta name="description" content={post.excerpt} />}
@@ -53,5 +55,8 @@ export const getStaticPaths: GetStaticPaths = async () => ({
 })
 
 export const getStaticProps: GetStaticProps = async ({ params }) => ({
-  props: { post: await getPostBySlug((params!.slug as string[]).join('/')) },
+  props: {
+    post: await getPostBySlug((params!.slug as string[]).join('/')),
+    categories: getAllCategories(),
+  },
 })

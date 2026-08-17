@@ -58,15 +58,24 @@ test('忽略以下划线开头的模板和草稿目录', async t => {
   assert.deepEqual([...plan.desiredPosts.keys()], ['读书记录/公开.md'])
 })
 
-test('阻止缺少 frontmatter 或放错分类的文章', async t => {
+test('阻止缺少 frontmatter 或未放入分类目录的文章', async t => {
   const paths = await fixture()
   t.after(() => fs.rm(paths.root, { recursive: true, force: true }))
   await write(path.join(paths.sourceDir, '学习记录', '无日期.md'), '---\ntitle: 无日期\n---\n正文')
   await assert.rejects(() => buildContentPlan(paths), /date 必须是有效的 YYYY-MM-DD 日期/)
 
   await fs.rm(path.join(paths.sourceDir, '学习记录'), { recursive: true })
-  await write(path.join(paths.sourceDir, '其他', '文章.md'), article())
-  await assert.rejects(() => buildContentPlan(paths), /文章必须放在分类目录下/)
+  await write(path.join(paths.sourceDir, '文章.md'), article())
+  await assert.rejects(() => buildContentPlan(paths), /文章必须放在一级分类目录下/)
+})
+
+test('任意一级子目录都会成为分类', async t => {
+  const paths = await fixture()
+  t.after(() => fs.rm(paths.root, { recursive: true, force: true }))
+  await write(path.join(paths.sourceDir, '书影音', '文章.md'), article())
+
+  const plan = await buildContentPlan(paths)
+  assert.deepEqual([...plan.desiredPosts.keys()], ['书影音/文章.md'])
 })
 
 test('阻止缺失图片和重名图片', async t => {

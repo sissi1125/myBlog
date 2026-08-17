@@ -5,7 +5,7 @@ import { remark } from 'remark'
 import remarkGfm from 'remark-gfm'
 import remarkHtml from 'remark-html'
 
-// 文章存放目录：posts/学习记录/、posts/就业思考/、posts/读书记录/
+// 文章存放目录：posts/<分类>/<文章>.md
 const POSTS_DIR = path.join(process.cwd(), 'posts')
 
 export interface PostMeta {
@@ -19,6 +19,11 @@ export interface PostMeta {
 
 export interface Post extends PostMeta {
   contentHtml: string
+}
+
+export interface Category {
+  id: string
+  label: string
 }
 
 function normalizeDate(value: unknown): string {
@@ -101,8 +106,9 @@ export async function getPostBySlug(slug: string): Promise<Post> {
   }
 }
 
-export const CATEGORIES = [
-  { id: '学习记录', label: '学习记录', subcategories: ['前端', '后端', '运维', '计算机基础'] },
-  { id: '就业思考', label: '就业 / 个人发展', subcategories: [] },
-  { id: '读书记录', label: '读书记录', subcategories: [] },
-]
+export function getAllCategories(): Category[] {
+  const categoryIds = new Set(getAllPostsMeta().map(post => post.category))
+  return Array.from(categoryIds)
+    .sort((a, b) => a.localeCompare(b, 'zh-CN'))
+    .map(id => ({ id, label: id }))
+}
