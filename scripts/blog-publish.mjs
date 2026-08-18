@@ -5,7 +5,8 @@ import { stdin as input, stdout as output } from 'node:process'
 import { applyContentPlan, buildContentPlan, formatPlan } from './blog-content.mjs'
 
 function git(args, options = {}) {
-  return execFileSync('git', args, { encoding: 'utf8', stdio: options.stdio || 'pipe' }).trim()
+  const result = execFileSync('git', args, { encoding: 'utf8', stdio: options.stdio || 'pipe' })
+  return typeof result === 'string' ? result.trim() : ''
 }
 
 function publishDate() {
