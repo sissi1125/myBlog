@@ -1,4 +1,5 @@
 import { execFileSync, spawnSync } from 'node:child_process'
+import { existsSync } from 'node:fs'
 import { createInterface } from 'node:readline/promises'
 import { stdin as input, stdout as output } from 'node:process'
 import { applyContentPlan, buildContentPlan, formatPlan } from './blog-content.mjs'
@@ -43,9 +44,19 @@ try {
   assertGitState()
   const plan = await buildContentPlan()
   console.log(formatPlan(plan))
-  if (plan.changes.length === 0) process.exit(0)
+  const pendingContent = git([
+    '-c',
+    'core.quotepath=false',
+    'status',
+    '--porcelain',
+    '--',
+    'posts',
+    'public/images/posts',
+  ])
+  if (plan.changes.length === 0 && !pendingContent) process.exit(0)
+  if (plan.changes.length > 0) await applyContentPlan(plan)
+  else console.log('检测到已同步但尚未提交的内容，继续发布。')
 
-  await applyContentPlan(plan)
   console.log('\n正在验证生产构建...')
   const build = spawnSync('pnpm', ['build'], { stdio: 'inherit' })
   if (build.status !== 0) throw new Error('生产构建失败，内容尚未提交或推送。')
@@ -57,7 +68,10 @@ try {
     process.exit(0)
   }
 
-  git(['add', '--', 'posts', 'public/images/posts'])
+  const stagePaths = ['posts', 'public/images/posts'].filter(
+    filePath => existsSync(filePath) || git(['ls-files', '--', filePath]),
+  )
+  git(['add', '-A', '--', ...stagePaths])
   try {
     git(['diff', '--cached', '--quiet'])
     console.log('没有需要提交的变化。')
